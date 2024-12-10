@@ -56,13 +56,13 @@ optimizer = torch.optim.SGD(model.parameters(), lr=leatniog_rate)
 n_opochs = 5
 for k in range(n_opochs):
     print(f'opoch {k+1}/{n_opochs}', end=': ', flush=True)
-    
+    time_start = time.time()
     loss_train = models.train(model, dataloader_train, loss_fn, optimizer)
     print(f'train loss: {loss_train}')
-    
+    time_end = time.time()
     loss_test = models.test(model, dataloader_test, loss_fn)
     print(f'test lodd: {loss_test}')
-    
+    print(f'test loss: {loss_test:.3f}({time_end - time_start})',end=',')
     acc_train  = models.test_accuracy(model, dataloader_train)
     print(f'test accuracy: {acc_train*100:.3f}%')
     acc_test = models.test_accuracy(model, dataloader_test)

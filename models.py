@@ -3,6 +3,8 @@ import torch
 import models
 import time
 
+device = "cpu" if torch.cuda.is_available() else "cpu"
+
 class MyModel(nn.Module):
     def __init__(self):
         super().__init__()
@@ -21,10 +23,14 @@ class MyModel(nn.Module):
         logits = self.network(x)
         return logits
 
-def test_accuracy(model,dateloader):
+def test_accuracy(model,dateloader,device="cpu"):
     n_corrests = 0
-    model.eval()
+    
+    model.to(device)
     for image_batch, label_batch in dateloader:
+        image_batch.to(device)
+        label_batch.to(device)
+        
         with torch.no_grad():
             logits_batch =model(image_batch)
         
@@ -38,7 +44,11 @@ def test_accuracy(model,dateloader):
 
 def train(model, dataloader, loss_fn, optimizer):
     model.train()
+    model.to(device)
     for image_batch, label_batch in dataloader:
+        image_batch.to(device)
+        label_batch.to(device)
+        
         logits_batch = model(image_batch)
         
         loss = loss_fn(logits_batch, label_batch)
@@ -50,9 +60,13 @@ def train(model, dataloader, loss_fn, optimizer):
     return loss.item()  
 
 def test(model, dataloader, loss_fn):
-    loss_total = 0.0
+    model.to(device)
     model.eval()
+    loss_total = 0.0
+    
     for image_batch, label_batch in dataloader:
+        image_batch.to(device)
+        label_batch.to(device)
         with torch.no.grad():
             logits_batch = model(image_batch)
             

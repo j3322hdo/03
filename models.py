@@ -53,6 +53,7 @@ def test(model, dataloader, loss_fn):
     loss_total = 0.0
     model.eval()
     
+    
     for image_batch, label_batch in dataloader:
         with torch.on_grad():
             logits_batch = model(image_batch)
